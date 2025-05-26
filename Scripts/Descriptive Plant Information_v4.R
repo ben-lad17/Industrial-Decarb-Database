@@ -32,6 +32,9 @@ library(tidyverse)
 library(openxlsx)
 library(sf)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
+
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -41,49 +44,27 @@ is_unique_id <- function(data, vars) {
   n_unique == n_total
 }
 
-# Export function
-export_industry_data <- function(version, industry) {
-  # Construct workbook name
-  wb_name <- paste0(industry, "_descr_info_", version)
-  workbook <- createWorkbook()
-  
-  # Construct variable names dynamically
-  industry_data <- get(industry)
-  industry_data_2023 <- get(paste0(industry, "_2023"))
-  
-  # Add worksheets and write data
-  addWorksheet(workbook, "descr_info")
-  writeData(workbook, "descr_info", industry_data)
-  
-  addWorksheet(workbook, "descr_info_2023")
-  writeData(workbook, "descr_info_2023", industry_data_2023)
-  
-  # Save the workbook with the correct naming convention
-  saveWorkbook(workbook, here("Output", paste0(wb_name, ".xlsx")), overwrite = TRUE)
-}
-
-
 
 ###
 # load data
-ghgrp_facilities = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+ghgrp_facilities = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics))
 is_unique_id(ghgrp_facilities, c("facility_id", "year"))
 
-naics_data = read_excel(here("Data", "2022-NAICS-to-SIC-Crosswalk.xlsx")) |>
+naics_data = read_excel("Data/2022-NAICS-to-SIC-Crosswalk.xlsx") |>
   clean_names() |>
   select(x2022_naics_code, x2022_naics_title) |>
   distinct() |>
   rename(naics_code = x2022_naics_code, naics_title = x2022_naics_title) 
 is_unique_id(naics_data, "naics_code")
 
-relevant_naics = read_excel(here("Data", "target_NAICS.xlsx")) |>
+relevant_naics = read_excel("Data/target_NAICS.xlsx") |>
   clean_names() |>
   rename(primary_naics = x6_digit_naics_code) |>
   select(primary_naics) |>
   mutate(keep_naics = 1)
 
-egrid_subregions = st_read(here("Data/egrid2023_subregions", "eGRID2023_Subregions.shp"))
+egrid_subregions = st_read("Data/egrid2023_subregions/eGRID2023_Subregions.shp")
 
 ###
 # merge facilities and naics data, create blank variables for data we don't yet have, 
@@ -114,8 +95,8 @@ ghgrp_facilities_naics_title_2023 = ghgrp_facilities_naics_title |>
   filter(year==2023)
 
 ### Export ###
-write.xlsx(ghgrp_facilities_naics_title, here("Output", "descr_info_relevant_naics.xlsx"))
-write.xlsx(ghgrp_facilities_naics_title_2023, here("Output", "descr_info_relevant_naics_2023.xlsx"))
+write.xlsx(ghgrp_facilities_naics_title, "Output/descr_info_relevant_naics.xlsx")
+write.xlsx(ghgrp_facilities_naics_title_2023, "Output/descr_info_relevant_naics_2023.xlsx")
 
 
 
