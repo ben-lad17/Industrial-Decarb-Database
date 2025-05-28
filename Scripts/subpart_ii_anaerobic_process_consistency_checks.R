@@ -27,6 +27,9 @@ library(janitor)
 library(readxl)
 library(tidyverse)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
+
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
 source(here("Functions", "convert_to_numeric.R"))
@@ -34,10 +37,10 @@ source(here("Functions", "export_facility_unit_data.R"))
 
 
 ### Load data
-methane_processes = read_excel(here("Data/Subpart II", "ii_ch4_gen_process.xlsx"))
-subpart_data = read_excel(here("Data/Subpart II", "ii_subpart_level_information.xlsx"))
-eq_6 = read_excel(here("Data/Subpart II", "ii_equation_ii6.xlsx"))
-eq_3 = read_excel(here("Data/Subpart II", "ii_equation_ii3.xlsx"))
+methane_processes = read_excel("Data/Subpart II/ii_ch4_gen_process.xlsx")
+subpart_data = read_excel("Data/Subpart II/ii_subpart_level_information.xlsx")
+eq_6 = read_excel("Data/Subpart II/ii_equation_ii6.xlsx")
+eq_3 = read_excel("Data/Subpart II/ii_equation_ii3.xlsx")
 
 
 ### Clean data

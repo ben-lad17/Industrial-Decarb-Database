@@ -28,6 +28,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -40,7 +41,7 @@ is_unique_id <- function(data, vars) {
 ### Load data ###
 
 # facility level data
-facility_level_data = read_excel(here("Output", "subpart_c_emissions_by_facility_v2.xlsx")) |>
+facility_level_data = read_excel("Output/subpart_c_emissions_by_facility_v2.xlsx") |>
   select(facility_id, reporting_year, primary_naics, carbon_dioxide_subpart_c,
          biogenic_co2_subpart_c, methane_subpart_c, nitrous_oxide_subpart_c) |>
   pivot_longer(cols = c("carbon_dioxide_subpart_c", "biogenic_co2_subpart_c", 
@@ -59,7 +60,7 @@ facility_level_data = read_excel(here("Output", "subpart_c_emissions_by_facility
   rename(ghg_quantity_facility_level = ghg_quantity)
 
 # unit level data
-unit_level = read.csv(here("Output", "subpart_c_emissions_and_fuel_by_unit_v3.csv")) |>
+unit_level = read.csv("Output/subpart_c_emissions_and_fuel_by_unit_v3.csv") |>
   group_by(facility_id, reporting_year, primary_naics, ghg_gas_name) |>
   summarise(
     ghg_quantity = sum(ghg_quantity, na.rm = TRUE)

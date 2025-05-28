@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
@@ -38,17 +39,17 @@ source(here("Functions", "export_facility_unit_data.R"))
 
 ### Load Data ###
 
-flare_emissions = read_excel(here("Data/Subpart X", "x_flare_information.xlsx")) |>
+flare_emissions = read_excel("Data/Subpart X/x_flare_information.xlsx") |>
   mutate(flare_ch4_emissions = as.numeric(flare_ch4_emissions)) |>
   mutate(flare_co2_emissions = as.numeric(flare_co2_emissions)) |>
   mutate(flare_n2o_emissions = as.numeric(flare_n2o_emissions))
 
-mass_balance_emissions = read_excel(here("Data/Subpart X", "x_mass_balance_unit_details.xlsx")) 
+mass_balance_emissions = read_excel("Data/Subpart X/x_mass_balance_unit_details.xlsx") 
 
-cems_emissions = read_excel(here("Data/Subpart X", "x_cems_details.xlsx")) 
+cems_emissions = read_excel("Data/Subpart X/x_cems_details.xlsx")
 
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   rename(reporting_year = year) |>
   select(facility_id, reporting_year, primary_naics)
 
@@ -121,5 +122,5 @@ emissions_by_unit = bind_rows(flare_emissions_wide, mass_balance_wide, cems_wide
   mutate(subpart = "X") |>
   left_join(y = facilities_data, by = c("facility_id", "reporting_year"))
 
-write_xlsx(emissions_by_unit, path = here("Output", "subpart_x_emissions_by_unit_v1.xlsx"))
+write_xlsx(emissions_by_unit, path = "Output/subpart_x_emissions_by_unit_v1.xlsx")
 

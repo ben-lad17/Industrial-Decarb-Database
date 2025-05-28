@@ -29,20 +29,22 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
 ### load data
 # subpart x
-facility_emissions = read_excel(here("Data/Subpart X", "x_subpart_level_information.xlsx")) |>
+facility_emissions = read_excel("Data/Subpart X/x_subpart_level_information.xlsx") |>
   rename(ghg_quantity_facility = ghg_quantity) |>
   filter(ghg_quantity_facility != 0)
 
-flare_emissions = read_excel(here("Data/Subpart X", "x_flare_information.xlsx")) |>
+flare_emissions = read_excel("Data/Subpart X/x_flare_information.xlsx") |>
   mutate(flare_ch4_emissions = as.numeric(flare_ch4_emissions)) |>
   mutate(flare_co2_emissions = as.numeric(flare_co2_emissions)) |>
   mutate(flare_n2o_emissions = as.numeric(flare_n2o_emissions))
 
-mass_balance_emissions = read_excel(here("Data/Subpart X", "x_mass_balance_unit_details.xlsx")) 
+mass_balance_emissions = read_excel("Data/Subpart X/x_mass_balance_unit_details.xlsx")
 
-cems_emissions = read_excel(here("Data/Subpart X", "x_cems_details.xlsx")) 
+cems_emissions = read_excel("Data/Subpart X/x_cems_details.xlsx")
 
 ### process flare emissions for comparison
 flare_emissions_facility = flare_emissions |>
@@ -135,5 +137,5 @@ unit_emissions_comparison = full_join(x = facility_emissions, y = unit_emissions
   arrange(facility_id, reporting_year, ghg_name) |>
   mutate(difference = ghg_quantity_facility - ghg_quantity_unit)
 
-write.xlsx(unit_emissions_comparison, here("Output", "subpart_x_consistency_checks.xlsx"))
+write.xlsx(unit_emissions_comparison, "Output/subpart_x_consistency_checks.xlsx")
 

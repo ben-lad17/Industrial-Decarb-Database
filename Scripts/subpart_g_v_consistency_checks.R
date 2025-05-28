@@ -29,15 +29,17 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
 ### load data
 # subpart g
-facility_emissions_g = read_excel(here("Data/Subpart G", "g_subpart_level_information.xlsx")) |>
+facility_emissions_g = read_excel("Data/Subpart G/g_subpart_level_information.xlsx") |>
   rename(co2_emissions_facility = ghg_quantity) |>
   filter(co2_emissions_facility != 0)
 
 unique(facility_emissions_g$ghg_name)
 
-unit_emissions_g = read_excel(here("Data/Subpart G", "g_non_cems_source_info.xlsx")) |>
+unit_emissions_g = read_excel("Data/Subpart G/g_non_cems_source_info.xlsx") |>
   distinct(co2_emissions, facility_id, unit_name, reporting_year) |>
   group_by(facility_id, reporting_year) |>
   summarise(
@@ -47,12 +49,12 @@ unit_emissions_g = read_excel(here("Data/Subpart G", "g_non_cems_source_info.xls
   rename(co2_emissions_unit = co2_emissions)
 
 # subpart v
-facility_emissions_v = read_excel(here("Data/Subpart V", "v_subpart_level_information.xlsx")) |>
+facility_emissions_v = read_excel("Data/Subpart V/v_subpart_level_information.xlsx") |>
   rename(n2o_emissions_facility = ghg_quantity) 
 
 unique(facility_emissions_v$ghg_name)
 
-unit_emissions_v = read_excel(here("Data/Subpart V", "v_nitric_acid_train.xlsx")) |>
+unit_emissions_v = read_excel("Data/Subpart V/v_nitric_acid_train.xlsx") |>
   group_by(facility_id, reporting_year) |>
   summarise(
     annual_unrounded_n2o_emiss = sum(annual_unrounded_n2o_emiss, na.rm = TRUE)

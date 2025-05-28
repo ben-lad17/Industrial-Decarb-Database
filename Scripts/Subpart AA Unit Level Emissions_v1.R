@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
@@ -39,17 +40,17 @@ source(here("Functions", "export_facility_unit_data.R"))
 
 #spent liquor
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   rename(reporting_year = year) |>
   select(facility_id, reporting_year, primary_naics)
 is_unique_id(facilities_data, c("facility_id", "reporting_year"))
 
-spent_liquor = read_excel(here("Data/Subpart AA", "aa_spent_liquor_information.xlsx")) |>
+spent_liquor = read_excel("Data/Subpart AA/aa_spent_liquor_information.xlsx") |>
   convert_to_numeric(c("biomass_ch4_emissions_factor", "biomass_n2o_emissions_factor"))
 is_unique_id(spent_liquor, c("facility_id", "reporting_year", "unit_name"))
 
 # fuel data
-fossil_fuel_data = read_excel(here("Data/Subpart AA", "aa_fossil_fuel_information.xlsx")) 
+fossil_fuel_data = read_excel("Data/Subpart AA/aa_fossil_fuel_information.xlsx")
 is_unique_id(fossil_fuel_data, c("facility_id", "reporting_year", "unit_name", "fuel_type"))
 
 
@@ -106,5 +107,5 @@ emissions_by_unit = left_join(x = fossil_fuel_data,
 
 
 # Export
-write_xlsx(emissions_by_unit, path = here("Output", "subpart_aa_emissions_by_unit_v1.xlsx"))
+write_xlsx(emissions_by_unit, path = "Output/subpart_aa_emissions_by_unit_v1.xlsx")
 

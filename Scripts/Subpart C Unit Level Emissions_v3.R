@@ -32,6 +32,8 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -51,20 +53,20 @@ convert_to_numeric <- function(data, columns) {
 ### Load Data ###
 
 # facilities
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   select(facility_id, primary_naics, year) |>
   rename(reporting_year = year) 
 is_unique_id(facilities_data, c("facility_id", "reporting_year"))
 
 # biogenic emissions
-biogenic_emissions = read_excel(here("Data/Subpart C", "Configuration_level.xlsx")) |>
+biogenic_emissions = read_excel("Data/Subpart C/Configuration_level.xlsx") |>
   distinct() |>
   select(facility_id, reporting_year, unit_name, tier123_biogenic_co2_emissions) |>
   convert_to_numeric("tier123_biogenic_co2_emissions")
 is_unique_id(biogenic_emissions, c("facility_id", "reporting_year", "unit_name"))
 
 # fuel level
-fuel_level_data = read_excel(here("Data/Subpart C", "Fuel_level_information.xlsx")) |>
+fuel_level_data = read_excel("Data/Subpart C/Fuel_level_information.xlsx") |>
   convert_to_numeric(c("tier1_co2_combustion_emissions", "tier2_co2_combustion_emissions", 
                        "tier3_co2_combustion_emissions", "tier1_ch4_emissions_co2e",
                        "tier2_ch4_emissions_co2e", "tier3_ch4_emissions_co2e", 
@@ -165,5 +167,5 @@ emissions_by_unit <- fuel_level_data_w_naics |>
   mutate(hrsg_bypass = "")
 
 
-write_csv(emissions_by_unit, here("Output", "subpart_c_emissions_and_fuel_by_unit_v3.csv"))
+write_csv(emissions_by_unit, "Output/subpart_c_emissions_and_fuel_by_unit_v3.csv")
 

@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 # convert variables from string to numeric
@@ -39,7 +40,7 @@ convert_to_numeric <- function(data, columns) {
 
 ### Load Data ###
 
-fuel_level_data = read_excel(here("Data/Subpart C", "Fuel_level_information.xlsx")) |>
+fuel_level_data = read_excel("Data/Subpart C/Fuel_level_information.xlsx") |>
   convert_to_numeric(c("tier1_co2_combustion_emissions", "tier2_co2_combustion_emissions", 
                        "tier3_co2_combustion_emissions", "tier1_ch4_emissions_co2e",
                        "tier2_ch4_emissions_co2e", "tier3_ch4_emissions_co2e", 

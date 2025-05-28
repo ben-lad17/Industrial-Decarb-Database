@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
@@ -39,13 +40,13 @@ source(here("Functions", "export_facility_unit_data.R"))
 ### Load Data ###
 
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   rename(reporting_year = year) |>
   select(facility_id, reporting_year, primary_naics)
 
 # subpart ii data
-eq_6 = read_excel(here("Data/Subpart II", "ii_equation_ii6.xlsx"))
-eq_3 = read_excel(here("Data/Subpart II", "ii_equation_ii3.xlsx"))
+eq_6 = read_excel("Data/Subpart II/ii_equation_ii6.xlsx")
+eq_3 = read_excel("Data/Subpart II/ii_equation_ii3.xlsx")
 
 ### Wastewater Treatment Emissions
 eq_6_clean = eq_6 |>
@@ -66,5 +67,5 @@ emissions_by_unit = rbind(eq_6_clean, eq_3_clean) |>
   mutate(ghg_gas_name = "Methane") |>
   left_join(y = facilities_data, by=c("facility_id", "reporting_year")) 
 
-write_xlsx(emissions_by_unit, path = here("Output", "subpart_ii_emissions_by_unit_v1.xlsx"))
+write_xlsx(emissions_by_unit, path = "Output/subpart_ii_emissions_by_unit_v1.xlsx")
 

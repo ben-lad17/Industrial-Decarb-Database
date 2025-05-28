@@ -33,6 +33,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -50,7 +51,7 @@ convert_to_numeric <- function(data, columns) {
 ### Load Data ###
 
 ### facilities
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   select(facility_id, primary_naics, year, secondary_naics, add_naics_code) |>
   rename(reporting_year = year) 
 is_unique_id(facilities_data, c("facility_id", "reporting_year"))
@@ -59,7 +60,7 @@ pulp_paper_naics = facilities_data |>
   filter(primary_naics %in% c("322110", "322120", "322130"))
 
 ### Pulp and paper industry as downloaded from GHGRP flight
-file_path = here("Data", "flight_pulp_and_paper_facilities.xls")
+file_path = "Data/flight_pulp_and_paper_facilities.xls"
 
 # Get the names of all sheets
 sheet_names <- excel_sheets(file_path)

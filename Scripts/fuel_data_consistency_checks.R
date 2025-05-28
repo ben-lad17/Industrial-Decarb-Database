@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -57,14 +58,14 @@ report_duplicates <- function(data, vars) {
 ### Load data and determine unique id variables ###
 
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   select(facility_id, primary_naics, year) |>
   rename(reporting_year = year) 
 is_unique_id(facilities_data, c("facility_id", "reporting_year"))
 
 
 # Monthly solid fuel inputs
-solid_fuel_monthly_inputs = read_excel(here("Data/Subpart C", "Eqc3c8_monthly_inputs_solid_fuel.xlsx")) |>
+solid_fuel_monthly_inputs = read_excel("Data/Subpart C/Eqc3c8_monthly_inputs_solid_fuel.xlsx") |>
   convert_to_numeric("fuel_combusted") |>
   distinct()
 is_unique_id(solid_fuel_monthly_inputs, c("facility_id", "reporting_year", "unit_name",
@@ -76,14 +77,14 @@ is_unique_id(solid_fuel_monthly_inputs, c("facility_id", "reporting_year", "unit
 #                                               "month", "fuel_type"))
 
 # Monthly Liquid fuel inputs
-liquid_fuel_monthly_inputs = read_excel(here("Data/Subpart C", "Eqc4c8_monthly_inputs_liquid_fuel.xlsx")) |>
+liquid_fuel_monthly_inputs = read_excel("Data/Subpart C/Eqc4c8_monthly_inputs_liquid_fuel.xlsx") |>
   convert_to_numeric("fuel_combusted") |>
   distinct()
 is_unique_id(liquid_fuel_monthly_inputs, c("facility_id", "reporting_year", "unit_name",
                                            "month", "fuel_type"))
 
 # Monthly Gaseous fuel inputs
-gas_fuel_monthly_inputs = read_excel(here("Data/Subpart C", "Eqc5c8_monthly_inputs_gaseous_fuel.xlsx")) |>
+gas_fuel_monthly_inputs = read_excel("Data/Subpart C/Eqc5c8_monthly_inputs_gaseous_fuel.xlsx") |>
   distinct() |> # drop duplicates
   convert_to_numeric("fuel_combusted")
 is_unique_id(gas_fuel_monthly_inputs, c("facility_id", "reporting_year", "unit_name",
@@ -96,7 +97,7 @@ is_unique_id(gas_fuel_monthly_inputs, c("facility_id", "reporting_year", "unit_n
 
 
 # Fuel Level info
-fuel_level_data = read_excel(here("Data/Subpart C", "Fuel_level_information.xlsx"))|>
+fuel_level_data = read_excel("Data/Subpart C/Fuel_level_information.xlsx") |>
   convert_to_numeric(c("tier1_co2_combustion_emissions", "tier2_co2_combustion_emissions", 
                        "tier3_co2_combustion_emissions", "tier1_ch4_emissions_co2e",
                        "tier2_ch4_emissions_co2e", "tier3_ch4_emissions_co2e", 
