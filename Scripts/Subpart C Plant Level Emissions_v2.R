@@ -32,6 +32,8 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
 
 ### Functions ###
 # test whether set of variables are unique identifiers
@@ -60,17 +62,17 @@ report_duplicates <- function(data, vars) {
 ### Load data and determine unique id variables ###
 
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   select(facility_id, primary_naics, year) |>
   rename(reporting_year = year) 
 is_unique_id(facilities_data, c("facility_id", "reporting_year"))
 
 # Total facility combustion emissions by gas 
-subpart_level_data = read_excel(here("Data/Subpart C", "c_subpart_level_information.xlsx")) 
+subpart_level_data = read_excel("Data/Subpart C/c_subpart_level_information.xlsx")
 is_unique_id(subpart_level_data, c("facility_id", "ghg_gas_name", "reporting_year"))
 
 # get declared combustion units
-fuel_level_data = read_excel(here("Data/Subpart C", "Fuel_level_information.xlsx")) 
+fuel_level_data = read_excel("Data/Subpart C/Fuel_level_information.xlsx")
 
 declared_comb_units = fuel_level_data |>
   select(facility_id, reporting_year, unit_name) |>
@@ -105,7 +107,7 @@ facility_emissions = left_join(x = subpart_level_data, facilities_data, by=c("fa
 
 is_unique_id(facility_emissions, c("facility_id", "reporting_year"))
 
-write_xlsx(facility_emissions, path = here("Output", "subpart_c_emissions_by_facility_v2.xlsx"))
+write_xlsx(facility_emissions, path = "Output/subpart_c_emissions_by_facility_v2.xlsx")
 
 
 
