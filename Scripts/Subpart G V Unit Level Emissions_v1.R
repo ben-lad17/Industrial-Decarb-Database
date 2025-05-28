@@ -29,6 +29,7 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
 
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
@@ -38,15 +39,15 @@ source(here("Functions", "export_facility_unit_data.R"))
 
 ### Load Data ###
 # Facilities data
-facilities_data = read_excel(here("Data", "rlps_ghg_emitter_facilities.xlsx")) |>
+facilities_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   rename(reporting_year = year) |>
   select(facility_id, reporting_year, primary_naics)
 
 # subpart g
-subpart_g = read_excel(here("Data/Subpart G", "g_non_cems_source_info.xlsx")) 
+subpart_g = read_excel("Data/Subpart G/g_non_cems_source_info.xlsx")
 
 # subpart v
-subpart_v = read_excel(here("Data/Subpart V", "v_nitric_acid_train.xlsx")) 
+subpart_v = read_excel("Data/Subpart V/v_nitric_acid_train.xlsx")
 
 
 # process data
@@ -57,7 +58,7 @@ unit_emissions_g = subpart_g |>
   mutate(subpart = "G") |>
   left_join(y = facilities_data, by = c("facility_id", "reporting_year"))
 
-unit_emissions_v = read_excel(here("Data/Subpart V", "v_nitric_acid_train.xlsx")) |>
+unit_emissions_v = read_excel("Data/Subpart V/v_nitric_acid_train.xlsx") |>
   select(facility_id, reporting_year, nitric_acid_train_id, annual_unrounded_n2o_emiss) |>
   rename(unit_name = "nitric_acid_train_id") |>
   rename(ghg_quantity = "annual_unrounded_n2o_emiss") |>
@@ -66,7 +67,7 @@ unit_emissions_v = read_excel(here("Data/Subpart V", "v_nitric_acid_train.xlsx")
   left_join(y = facilities_data, by = c("facility_id", "reporting_year"))
 
 ### Export
-write_xlsx(unit_emissions_g, path = here("Output", "subpart_g_emissions_by_unit_v1.xlsx"))
-write_xlsx(unit_emissions_v, path = here("Output", "subpart_v_emissions_by_unit_v1.xlsx"))
+write_xlsx(unit_emissions_g, path = "Output/subpart_g_emissions_by_unit_v1.xlsx")
+write_xlsx(unit_emissions_v, path = "Output/subpart_v_emissions_by_unit_v1.xlsx")
 
 

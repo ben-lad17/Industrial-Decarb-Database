@@ -29,39 +29,41 @@ library(writexl)
 library(tidyverse)
 library(openxlsx)
 
+setwd("/Users/Ben L/Library/CloudStorage/Box-Box/Industrial Plant Raw Data/Industrial-Decarb-Database")
+
 ### Functions ###
 source(here("Functions", "is_unique_id.R"))
 source(here("Functions", "convert_to_numeric.R"))
 source(here("Functions", "export_facility_unit_data.R"))
 
 # load data
-subpart_aa = read_excel(here("Output", "subpart_aa_emissions_by_unit_v1.xlsx")) |>
+subpart_aa = read_excel("Output/subpart_aa_emissions_by_unit_v1.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics)) |>
   rename(ghg_name = "ghg_gas_name")
 
-subpart_c = read_csv(here("Output", "subpart_c_emissions_and_fuel_by_unit_v3.csv")) |>
+subpart_c = read_csv("Output/subpart_c_emissions_and_fuel_by_unit_v3.csv") |>
   rename(ghg_name = "ghg_gas_name")
 
-subpart_ii = read_excel(here("Output", "subpart_ii_emissions_by_unit_v1.xlsx")) |>
+subpart_ii = read_excel("Output/subpart_ii_emissions_by_unit_v1.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics))|>
   rename(ghg_name = "ghg_gas_name")
 
-subpart_g = read_excel(here("Output", "subpart_g_emissions_by_unit_v1.xlsx")) |>
+subpart_g = read_excel("Output/subpart_g_emissions_by_unit_v1.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics))
 
-subpart_v = read_excel(here("Output", "subpart_v_emissions_by_unit_v1.xlsx")) |>
+subpart_v = read_excel("Output/subpart_v_emissions_by_unit_v1.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics))
 
-subpart_x = read_excel(here("Output", "subpart_x_emissions_by_unit_v1.xlsx")) |>
+subpart_x = read_excel("Output/subpart_x_emissions_by_unit_v1.xlsx") |>
   mutate(primary_naics = as.numeric(primary_naics))
 
-relevant_naics = read_excel(here("Data", "target_NAICS.xlsx")) |>
+relevant_naics = read_excel("Data/target_NAICS.xlsx") |>
   clean_names() |>
   rename(primary_naics = x6_digit_naics_code) |>
   select(primary_naics) |>
   mutate(keep_naics = 1)
 
-recovery_boilers = read_excel(here("Data", "blrbac-usa-master-oper-rb-012925_w_unit_name.xls")) |>
+recovery_boilers = read_excel("Data/blrbac-usa-master-oper-rb-012925_w_unit_name.xls") |>
   clean_names() |>
   select(facility_id, unit_name, unit_age, start_up, mfgr, orig_m_lb_ds_day, current_rating, 
          no_drums, floor_d_decant_sf_slope_to_front_sr_slope_to_rear, design_psig, operate_psig,
@@ -91,7 +93,7 @@ unit_level_emissions_combined_2023 = unit_level_emissions_combined |>
   filter(reporting_year==2023)
 
 ### Export ###
-write.xlsx(unit_level_emissions_combined, here("Output", "unit_emissions_relevant_naics.xlsx"))
-write.xlsx(unit_level_emissions_combined_2023, here("Output", "unit_emissions_relevant_naics_2023.xlsx"))
+write.xlsx(unit_level_emissions_combined, "Output/unit_emissions_relevant_naics.xlsx")
+write.xlsx(unit_level_emissions_combined_2023, "Output/unit_emissions_relevant_naics_2023.xlsx")
 
 
