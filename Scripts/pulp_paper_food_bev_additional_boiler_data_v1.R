@@ -35,11 +35,13 @@ source(here("Functions", "is_unique_id.R"))
 source(here("Functions", "convert_to_numeric.R"))
 source(here("Functions", "export_facility_unit_data.R"))
 
-# load data
+# process data
 facility_data = read_excel("Data/rlps_ghg_emitter_facilities.xlsx") |>
   select(city, state, facility_name, facility_id) |>
   distinct() |>
   rename(ghgrp_id = facility_id)
+
+unit_emissions = read_excel("Output/unit_emissions_relevant_naics_2023.xlsx") 
 
 eip_t20_food_bev = read_excel("Data/2025.04.17 Food & Beverage Top 20 Unit-Level Data- EIP.xlsx") |>
   clean_names() |>
@@ -73,8 +75,43 @@ eip_t20_food_bev = read_excel("Data/2025.04.17 Food & Beverage Top 20 Unit-Level
   mutate(hap_lbs_eip_2023 = as.numeric(hap_lbs_eip_2023)) |>
   left_join(y = facility_data, by = c("facility_name", "city", "state"))
   
-  
+
+pulp_paper_facilities = read_excel("Data/Appendix B_Pulp and Paper_Facilities and Boilers.xlsx",
+                                   sheet = "Facilities", range = "A3:CN188") |>
+  clean_names() |>
+rename(ammonia_tons_2020 = ammonia_44, 
+       co_tons_2020 = carbon_monoxide, 
+       lead_lbs_2020 = lead_pounds, 
+       nox_tons_2020 = nitrogen_oxides, 
+       pm_tons_2020 = particulate_matter, 
+       so2_tons_2020 = sulfur_dioxide, 
+       voc_tons_2020 = volatile_organic_compounds, 
+       hap_lbs_2020 = hazardous_air_pollutants_pounds)
+
+is_unique_id(pulp_paper_facilities, c("ghgrp_id"))
 
 
+pulp_paper_boilers = read_excel("Data/Appendix B_Pulp and Paper_Facilities and Boilers.xlsx",
+                                   sheet = "Boilers", range = "A3:AN468") |>
+  clean_names() |>
+  rename(unit_name = boiler_unit_name,
+         ammonia_tons_2020 = ammonia,
+         co_tons_2020 = carbon_monoxide,
+         lead_lbs_2020 = lead_pounds, 
+         nox_tons_2020 = nitrogen_oxides, 
+         pm_tons_2020 = particulate_matter, 
+         so2_tons_2020 = sulfur_dioxide, 
+         voc_tons_2020 = volatile_organic_compounds, 
+         hap_lbs_2020 = hazardous_air_pollutants_pounds)
 
+is_unique_id(pulp_paper_boilers, c("ghgrp_id", "unit_name"))
+
+
+# test merge b/t boilers sheet and unit level ghgrp data
+units = unit_emissions |>
+  select(facility_id, unit_name, primary_naics) |>
+  distinct()
+
+merge_test = pulp_paper_boilers |>
+  left_join(y = units, by = c("ghgrp_id" = "facility_id", "unit_name" = "unit_name"))
 
