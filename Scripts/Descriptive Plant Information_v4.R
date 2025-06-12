@@ -76,12 +76,12 @@ ghgrp_facilities_naics_title = left_join(x = ghgrp_facilities,
   mutate(egrid_region = "") |>
   mutate(byproduct_fuels = "") |>
   select(parent_company, facility_name, address1, address2, city, county, county_fips, state, 
-         state_name, zip, latitude, longitude, facility_id, primary_naics, naics_title, ej_indicator, 
-         cogen_unit_emm_ind, cems_used, byproduct_fuels, year, secondary_naics) |>
+         state_name, zip, latitude, longitude, facility_id, primary_naics, secondary_naics, 
+         naics_title, ej_indicator, cogen_unit_emm_ind, cems_used, byproduct_fuels, year) |>
   left_join(y = relevant_naics, by = c("primary_naics")) |>
   filter(!is.na(keep_naics) | 
            (primary_naics >=  322110 & primary_naics <= 322139)) |>
-  select(-keep_naics, -secondary_naics) |>
+  select(-keep_naics) |>
   arrange(facility_id, year)
 
 ### Add egrid subregions

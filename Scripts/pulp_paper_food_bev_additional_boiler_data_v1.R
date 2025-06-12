@@ -115,3 +115,22 @@ units = unit_emissions |>
 merge_test = pulp_paper_boilers |>
   left_join(y = units, by = c("ghgrp_id" = "facility_id", "unit_name" = "unit_name"))
 
+
+
+### Export
+
+### export ###
+eip_pulp_paper_food_bev_boilers_v1 <- createWorkbook()
+
+addWorksheet(eip_pulp_paper_food_bev_boilers_v1, "eip_t20_food_bev")
+writeData(eip_pulp_paper_food_bev_boilers_v1, "eip_t20_food_bev", eip_t20_food_bev)
+
+addWorksheet(eip_pulp_paper_food_bev_boilers_v1, "eip_pulp_paper_facilities")
+writeData(eip_pulp_paper_food_bev_boilers_v1, "eip_pulp_paper_facilities", pulp_paper_facilities)
+
+addWorksheet(eip_pulp_paper_food_bev_boilers_v1, "eip_pulp_paper_boilers")
+writeData(eip_pulp_paper_food_bev_boilers_v1, "eip_pulp_paper_boilers", pulp_paper_boilers)
+
+saveWorkbook(eip_pulp_paper_food_bev_boilers_v1, "Output/eip_pulp_paper_food_bev_boilers_v1.xlsx", 
+             overwrite = TRUE)
+
